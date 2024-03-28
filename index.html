@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>CekZakat</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -52,87 +52,124 @@
             border-color: #f0f0f0;
             height: 50px;
         }
+
+        .footer-custom {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: wheat;
+            color: black;
+            text-align: center;
+            padding: 10px 0;
+        }
     </style>
 </head>
 
 <body>
 
-    <nav class="navbar navbar-light bg-white shadow">
-        <div class="container">
-            <a class="navbar-brand" href="#">CekZakat</a>
-        </div>
-    </nav>
+    <div class="container-main">
+        <nav class="navbar navbar-light navbar-expand-lg bg-white shadow">
+            <div class="container">
+                <a class="navbar-brand fw-bolder" href="#">CekZakat</a>
+                <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-bold" href="#">about</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-lighter" onclick="logout()">logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
 
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card border-0 rounded-5 shadow-lg p-3">
-                    <div class="card-body">
-                        <div class="col-md-12">
-                            <div class="row mb-5 text-center">
-                                <h5 class="fw-bolder">Pilih Jenis Zakat Anda</h5>
-                            </div>
-                            <div class="row justify-content-center mb-5 text-center">
-                                <div class="col m-1 btn-custom-1">
-                                    <button class="btn btn-white fw-semibold">Penghasilan</button>
+        <div class="container mt-5 mb-5 container-scrollable">
+            <div class="row justify-content-center">
+                <div class="col-md-6 mb-5">
+                    <div class="card border-0 rounded-5 shadow-lg p-3">
+                        <div class="card-body">
+                            <div class="col-md-12">
+                                <div class="row mb-5 text-center">
+                                    <h5 class="fw-bolder">Pilih Jenis Zakat Anda</h5>
                                 </div>
-                                <div class="col m-1 btn-custom-1">
-                                    <button class="btn btn-white fw-semibold">Tabungan</button>
-                                </div>
-                                <div class="col m-1 btn-custom-1">
-                                    <button class="btn btn-white fw-semibold">Emas</button>
-                                </div>
-                                <div class="col m-1 btn-custom-1">
-                                    <button class="btn btn-white fw-semibold">Perak</button>
-                                </div>
-                            </div>
-                            <div class="row form-body">
-                                <div class="mb-3">
-                                    <label for="username" class="form-label">Masukkan jumlah zakat anda</label>
-                                    <input type="number" class="form-control rounded-muted" id="username"
-                                        placeholder="Masukkan Jumlah Harta Anda">
-                                </div>
-                            </div>
-                            <div class="row mb-3 p-5">
-                                <div class="card">
-                                    <div class="card-header bg-white">
-                                        Notes
+                                <div class="row justify-content-center mb-5 text-center">
+                                    <div class="col m-1 btn-custom-1">
+                                        <button class="btn btn-white fw-semibold">Penghasilan</button>
                                     </div>
-                                    <div class="card-body">
-                                        Perhitungan zakat berdasarkan harga emas saat ini.
-                                        Harga emas saat ini adalah :  
-                                        <p class="gold-price"></p>
+                                    <div class="col m-1 btn-custom-1">
+                                        <button class="btn btn-white fw-semibold">Tabungan</button>
+                                    </div>
+                                    <div class="col m-1 btn-custom-1">
+                                        <button class="btn btn-white fw-semibold">Emas</button>
+                                    </div>
+                                    <div class="col m-1 btn-custom-1">
+                                        <button class="btn btn-white fw-semibold">Perak</button>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row px-5">
-                                <button class="btn btn-custom-2"> Cek Zakat Anda</button>
+                                <div class="row form-body">
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label">Masukkan jumlah zakat anda</label>
+                                        <input type="number" class="form-control rounded-muted" id="username"
+                                            placeholder="Masukkan Jumlah Harta Anda">
+                                    </div>
+                                </div>
+                                <div class="row mb-3 p-5">
+                                    <div class="card">
+                                        <div class="card-header bg-white">
+                                            Notes
+                                        </div>
+                                        <div class="card-body">
+                                            Perhitungan zakat berdasarkan harga emas saat ini.
+                                            Harga emas saat ini adalah :
+                                            <p class="fw-semibold gold-price">loading...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row px-5">
+                                    <button class="btn btn-custom-2"> Cek Zakat Anda</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="footer-custom fw-semibold">
+            <p>&copy; 2024 cekzakat. All rights reserved. Made with 📿, 🕌, 💻, 🫶 and ☕ by <a
+                href="https://github.com/fianrmdni" target="_blank" class="text-dark">fianramadhani</a> and <a
+                    href="https://daffashafwan.github.io" target="_blank" class="text-dark">daffashafwan</a></p>
+        </div>
     </div>
-
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function () {
             $.ajax({
-                    url: "https://logam-mulia-api.vercel.app/prices/hargaemas-com",
-                    type: 'GET',
-                    success: function (data) {
-                        $(".gold-price").text(data.data[0].buy + " Rupiah")
-                    },
-                    error: function (error) {
-                        console.log(error)
-                    }
-                });
+                url: "https://logam-mulia-api.vercel.app/prices/hargaemas-com",
+                type: 'GET',
+                success: function (data) {
+                    $(".gold-price").text(data.data[0].buy + " Rupiah")
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            });
         });
+
+        function logout(){
+            window.location.href = "auth"
+        }
     </script>
 </body>
 
