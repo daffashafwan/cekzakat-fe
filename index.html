@@ -143,7 +143,7 @@
         </div>
         <div class="footer-custom fw-semibold">
             <p>&copy; 2024 cekzakat. All rights reserved. Made with 📿, 🕌, 💻, 🫶 and ☕ by <a
-                href="https://github.com/fianrmdni" target="_blank" class="text-dark">fianramadhani</a> and <a
+                    href="https://github.com/fianrmdni" target="_blank" class="text-dark">fianramadhani</a> and <a
                     href="https://daffashafwan.github.io" target="_blank" class="text-dark">daffashafwan</a></p>
         </div>
     </div>
@@ -152,6 +152,7 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function () {
@@ -167,8 +168,30 @@
             });
         });
 
-        function logout(){
-            window.location.href = "auth"
+        function logout() {
+            let timerInterval;
+            Swal.fire({
+                title: "Logout Berhasil",
+                html: "Membawamu ke halaman login",
+                timer: 1500,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading();
+                    const timer = Swal.getPopup().querySelector("b");
+                    timerInterval = setInterval(() => {
+                        timer.textContent = `${Swal.getTimerLeft()}`;
+                    }, 100);
+                },
+                willClose: () => {
+                    clearInterval(timerInterval);
+                }
+            }).then((result) => {
+                /* Read more about handling dismissals below */
+                if (result.dismiss === Swal.DismissReason.timer) {
+                    console.log("I was closed by the timer");
+                }
+                window.location.href = 'auth';
+            });
         }
     </script>
 </body>
