@@ -245,7 +245,11 @@
                         JumlahZakat: parseFloat(jumlahZakat),
                     }),
                 success: function (data) {
-                    console.log(data)
+                    Swal.fire({
+                        title: 'Berhasil Mendapatkan Perhitungan Zakat',
+                        text: data.Message + " " + data.JumlahZakat,
+                        icon: 'success'
+                    })
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     Swal.fire({
