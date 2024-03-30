@@ -156,19 +156,47 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function () {
-            $.ajax({
-                url: "https://logam-mulia-api.vercel.app/prices/hargaemas-com",
-                type: 'GET',
-                success: function (data) {
-                    $(".gold-price").text(data.data[0].buy + " Rupiah")
-                },
-                error: function (error) {
-                    console.log(error)
-                }
-            });
+            const username = getCookie('Username')
+            if (!username) {
+                let timerInterval;
+                Swal.fire({
+                    title: "Belum Login",
+                    html: "Membawamu ke halaman login",
+                    timer: 1000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        console.log("I was closed by the timer");
+                    }
+                    window.location.href = 'auth';
+                });
+            } else {
+                $.ajax({
+                    url: "https://logam-mulia-api.vercel.app/prices/hargaemas-com",
+                    type: 'GET',
+                    success: function (data) {
+                        $(".gold-price").text(data.data[0].buy + " Rupiah")
+                    },
+                    error: function (error) {
+                        console.log(error)
+                    }
+                });
+            }
         });
 
         function logout() {
+            removeCookie('Username')
             let timerInterval;
             Swal.fire({
                 title: "Logout Berhasil",
@@ -192,6 +220,24 @@
                 }
                 window.location.href = 'auth';
             });
+        }
+
+        function getCookie(name) {
+            const cookieString = document.cookie;
+            const cookies = cookieString.split('; ');
+
+            for (const cookie of cookies) {
+                const [cookieName, cookieValue] = cookie.split('=');
+                if (cookieName === name) {
+                    return cookieValue;
+                }
+            }
+
+            return null;
+        }
+
+        function removeCookie(name) {
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
         }
     </script>
 </body>

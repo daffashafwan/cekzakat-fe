@@ -114,7 +114,7 @@
                             <label for="new-password" class="form-label">Kata Sandi</label>
                             <input type="password" class="form-control" id="new-password" name="new-password">
                         </div>
-                        <a class="btn btn-custom-2">Daftar</a>
+                        <a class="btn btn-custom-2" onclick="handleLoginRegister(false)">Daftar</a>
                     </div>
                 </div>
             </div>
@@ -132,34 +132,75 @@
             var username = $('#new-username').val()
             var password = $('#new-password').val()
 
+            var path = "register";
+            var html = "silahkan login"
+
             if (isLogin) {
+                path = "login"
+                html = "membawamu ke aplikasi"
                 username = $('#username').val()
                 password = $('#password').val()
             }
 
-            let timerInterval;
-            Swal.fire({
-                title: "Login Berhasil",
-                html: "Membawamu ke aplikasi",
-                timer: 1500,
-                timerProgressBar: true,
-                didOpen: () => {
-                    Swal.showLoading();
-                    const timer = Swal.getPopup().querySelector("b");
-                    timerInterval = setInterval(() => {
-                        timer.textContent = `${Swal.getTimerLeft()}`;
-                    }, 100);
+            $.ajax({
+                url: `https://dffshfwn.online/cekzakat/${path}`,
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(
+                    {
+                        Username: username,
+                        Password: password
+                    }),
+                success: function (data) {
+                    let timerInterval;
+                    Swal.fire({
+                        title: path + " berhasil!",
+                        html: html,
+                        timer: 1500,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                        }
+                    }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            console.log("I was closed by the timer");
+                        }
+                        if (isLogin) {
+                            setCookie('Username', username);
+                            window.location.href = '..';
+                        } else {
+                            window.location.reload();
+                        }
+                    });
                 },
-                willClose: () => {
-                    clearInterval(timerInterval);
+                error: function (jqXHR, textStatus, errorThrown) {
+                    Swal.fire({
+                        title: 'Gagal login!',
+                        text: 'Silahkan coba lagi',
+                        icon: 'error'
+                    })
+                    console.error('Ajax error:', textStatus, errorThrown);
                 }
-            }).then((result) => {
-                /* Read more about handling dismissals below */
-                if (result.dismiss === Swal.DismissReason.timer) {
-                    console.log("I was closed by the timer");
-                }
-                window.location.href = '..';
             });
+        }
+
+        function setCookie(name, value, hour) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + hour * 60 * 60 * 1000); // Convert days to hours
+            document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+        }
+
+        function removeCookie(name) {
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
         }
     </script>
 </body>
