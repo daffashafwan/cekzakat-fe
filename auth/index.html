@@ -142,55 +142,64 @@
                 password = $('#password').val()
             }
 
-            $.ajax({
-                url: `https://dffshfwn.online/cekzakat/${path}`,
-                type: 'POST',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(
-                    {
-                        Username: username,
-                        Password: password
-                    }),
-                success: function (data) {
-                    let timerInterval;
-                    Swal.fire({
-                        title: path + " berhasil!",
-                        html: html,
-                        timer: 1500,
-                        timerProgressBar: true,
-                        didOpen: () => {
-                            Swal.showLoading();
-                            const timer = Swal.getPopup().querySelector("b");
-                            timerInterval = setInterval(() => {
-                                timer.textContent = `${Swal.getTimerLeft()}`;
-                            }, 100);
-                        },
-                        willClose: () => {
-                            clearInterval(timerInterval);
-                        }
-                    }).then((result) => {
-                        /* Read more about handling dismissals below */
-                        if (result.dismiss === Swal.DismissReason.timer) {
-                            console.log("I was closed by the timer");
-                        }
-                        if (isLogin) {
-                            setCookie('Username', username);
-                            window.location.href = '..';
-                        } else {
-                            window.location.reload();
-                        }
-                    });
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    Swal.fire({
-                        title: 'Gagal login!',
-                        text: 'Silahkan coba lagi',
-                        icon: 'error'
-                    })
-                    console.error('Ajax error:', textStatus, errorThrown);
-                }
-            });
+            if (!username || !password) {
+                Swal.fire({
+                    title: "Gagal memproses akun",
+                    text: "Silahkan cek ulang username atau password",
+                    icon: "error"
+                });
+            } else {
+                $.ajax({
+                    url: `https://dffshfwn.online/cekzakat/${path}`,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify(
+                        {
+                            Username: username,
+                            Password: password
+                        }),
+                    success: function (data) {
+                        let timerInterval;
+                        Swal.fire({
+                            title: path + " berhasil!",
+                            html: html,
+                            timer: 1500,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                            }
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                console.log("I was closed by the timer");
+                            }
+                            if (isLogin) {
+                                setCookie('Username', username);
+                                window.location.href = '..';
+                            } else {
+                                window.location.reload();
+                            }
+                        });
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR.responseJSON)
+                        Swal.fire({
+                            title: 'Gagal login!',
+                            text: jqXHR.responseJSON.Message,
+                            icon: 'error'
+                        })
+                        console.error('Ajax error:', jqXHR, textStatus, errorThrown);
+                    }
+                });
+            }
         }
 
         function setCookie(name, value, hour) {

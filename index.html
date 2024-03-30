@@ -24,6 +24,18 @@
             /* Add margin between each button */
         }
 
+        .btn-custom-1-selected {
+            background-color: wheat;
+            color: #000000;
+            /* Text color */
+            border: none;
+            border-radius: 10px;
+            /* Adjust the border-radius to make the button more or less rounded */
+            padding: 10px 10px;
+            box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+            /* Add margin between each button */
+        }
+
         .btn-custom-1:hover {
             background-color: wheat
                 /* Shadow on hover */
@@ -100,23 +112,23 @@
                                     <h5 class="fw-bolder">Pilih Jenis Zakat Anda</h5>
                                 </div>
                                 <div class="row justify-content-center mb-5 text-center">
-                                    <div class="col m-1 btn-custom-1">
-                                        <button class="btn btn-white fw-semibold">Penghasilan</button>
+                                    <div class="col m-1 btn-custom-1 btn-zakat-type">
+                                        <button class="btn btn-white fw-semibold" onclick="getZakatType(this)">Penghasilan</button>
                                     </div>
-                                    <div class="col m-1 btn-custom-1">
-                                        <button class="btn btn-white fw-semibold">Tabungan</button>
+                                    <div class="col m-1 btn-custom-1 btn-zakat-type">
+                                        <button class="btn btn-white fw-semibold" onclick="getZakatType(this)">Tabungan</button>
                                     </div>
-                                    <div class="col m-1 btn-custom-1">
-                                        <button class="btn btn-white fw-semibold">Emas</button>
+                                    <div class="col m-1 btn-custom-1 btn-zakat-type">
+                                        <button class="btn btn-white fw-semibold" onclick="getZakatType(this)">Emas</button>
                                     </div>
-                                    <div class="col m-1 btn-custom-1">
-                                        <button class="btn btn-white fw-semibold">Perak</button>
+                                    <div class="col m-1 btn-custom-1 btn-zakat-type">
+                                        <button class="btn btn-white fw-semibold" onclick="getZakatType(this)">Perak</button>
                                     </div>
                                 </div>
                                 <div class="row form-body">
                                     <div class="mb-3">
                                         <label for="username" class="form-label">Masukkan jumlah zakat anda</label>
-                                        <input type="number" class="form-control rounded-muted" id="username"
+                                        <input type="number" class="form-control rounded-muted" id="jumlahzakat"
                                             placeholder="Masukkan Jumlah Harta Anda">
                                     </div>
                                 </div>
@@ -133,7 +145,7 @@
                                     </div>
                                 </div>
                                 <div class="row px-5">
-                                    <button class="btn btn-custom-2"> Cek Zakat Anda</button>
+                                    <button class="btn btn-custom-2" onclick="hitungZakat()"> Cek Zakat Anda</button>
                                 </div>
                             </div>
                         </div>
@@ -155,8 +167,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        const username = getCookie('Username')
+        var zakatType;
         $(document).ready(function () {
-            const username = getCookie('Username')
             if (!username) {
                 let timerInterval;
                 Swal.fire({
@@ -194,6 +207,54 @@
                 });
             }
         });
+
+        function getZakatType(button){
+            var clickedTextValue = $(button).text();
+            if (clickedTextValue.includes("Penghasilan")) {
+               zakatType = "penghasilan"
+            }
+
+            if (clickedTextValue.includes("Tabungan")) {
+               zakatType = "tabungan"
+            }
+
+            if (clickedTextValue.includes("Emas")) {
+               zakatType = "emas"
+            }
+
+            if (clickedTextValue.includes("Perak")) {
+               zakatType = "perak"
+            }
+        }
+
+        function hitungZakat() {
+            var jumlahZakat = $('#jumlahzakat').val()
+            console.log(jumlahZakat)
+            console.log(username)
+            $.ajax({
+                url: `https://dffshfwn.online/cekzakat/hitung-zakat`,
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(
+                    {
+                        Username: username,
+                        ZakatType: zakatType,
+                        JumlahZakat: parseFloat(jumlahZakat),
+                    }),
+                success: function (data) {
+                    console.log(data)
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    Swal.fire({
+                        title: 'Gagal menghitung zakat!',
+                        text: jqXHR.responseJSON.Message,
+                        icon: 'error'
+                    })
+                    console.error('Ajax error:', textStatus, errorThrown);
+                }
+            });
+        }
 
         function logout() {
             removeCookie('Username')
