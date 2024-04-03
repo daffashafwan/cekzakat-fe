@@ -205,7 +205,8 @@
                     url: "https://logam-mulia-api.vercel.app/prices/hargaemas-com",
                     type: 'GET',
                     success: function (data) {
-                        $(".gold-price").text(data.data[0].buy + " Rupiah")
+                        hargaEmas = formatCurrency(data.data[0].buy.toString())
+                        $(".gold-price").text(hargaEmas + " Rupiah")
                     },
                     error: function (error) {
                         console.log(error)
@@ -230,6 +231,17 @@
             // Update the input value
             this.value = formattedValue;
         });
+
+        function formatCurrency(value){
+            let formattedValue = '';
+            for (let i = value.length - 1, j = 0; i >= 0; i--, j++) {
+                if (j > 0 && j % 3 === 0) {
+                    formattedValue = '.' + formattedValue; // Insert dot every 3 characters from the right
+                }
+                formattedValue = value.charAt(i) + formattedValue;
+            }
+            return formattedValue
+        }
 
 
         function getZakatType(button) {
