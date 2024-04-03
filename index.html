@@ -113,22 +113,27 @@
                                 </div>
                                 <div class="row justify-content-center mb-5 text-center">
                                     <div class="col m-1 btn-custom-1 btn-zakat-type">
-                                        <button class="btn btn-white fw-semibold" onclick="getZakatType(this)">Penghasilan</button>
+                                        <button class="btn btn-white fw-semibold"
+                                            onclick="getZakatType(this)">Penghasilan</button>
                                     </div>
                                     <div class="col m-1 btn-custom-1 btn-zakat-type">
-                                        <button class="btn btn-white fw-semibold" onclick="getZakatType(this)">Tabungan</button>
+                                        <button class="btn btn-white fw-semibold"
+                                            onclick="getZakatType(this)">Tabungan</button>
                                     </div>
                                     <div class="col m-1 btn-custom-1 btn-zakat-type">
-                                        <button class="btn btn-white fw-semibold" onclick="getZakatType(this)">Emas</button>
+                                        <button class="btn btn-white fw-semibold"
+                                            onclick="getZakatType(this)">Emas</button>
                                     </div>
                                     <div class="col m-1 btn-custom-1 btn-zakat-type">
-                                        <button class="btn btn-white fw-semibold" onclick="getZakatType(this)">Perak</button>
+                                        <button class="btn btn-white fw-semibold"
+                                            onclick="getZakatType(this)">Perak</button>
                                     </div>
                                 </div>
                                 <div class="row form-body">
                                     <div class="mb-3">
-                                        <label for="username" class="form-label">Masukkan jumlah zakat <span class="tipezakat fw-bold"></span> anda</label>
-                                        <input type="number" class="form-control rounded-muted" id="jumlahzakat"
+                                        <label for="username" class="form-label">Masukkan jumlah zakat <span
+                                                class="tipezakat fw-bold"></span> anda</label>
+                                        <input type="text" class="form-control rounded-muted" id="jumlahzakat"
                                             placeholder="Masukkan Jumlah Harta Anda">
                                     </div>
                                 </div>
@@ -169,6 +174,7 @@
     <script>
         const username = getCookie('Username')
         var zakatType;
+        var jumlahZakat;
         $(document).ready(function () {
             if (!username) {
                 let timerInterval;
@@ -208,29 +214,46 @@
             }
         });
 
-        function getZakatType(button){
+        document.getElementById('jumlahzakat').addEventListener('input', function () {
+            // Remove non-numeric characters and leading zeros
+            let value = this.value.replace(/[^\d]/g, '').replace(/^0+/, '');
+            jumlahZakat = value
+            // Insert dots as thousand separators
+            let formattedValue = '';
+            for (let i = value.length - 1, j = 0; i >= 0; i--, j++) {
+                if (j > 0 && j % 3 === 0) {
+                    formattedValue = '.' + formattedValue; // Insert dot every 3 characters from the right
+                }
+                formattedValue = value.charAt(i) + formattedValue;
+            }
+
+            // Update the input value
+            this.value = formattedValue;
+        });
+
+
+        function getZakatType(button) {
             var clickedTextValue = $(button).text();
             if (clickedTextValue.includes("Penghasilan")) {
-               zakatType = "penghasilan"
+                zakatType = "penghasilan"
             }
 
             if (clickedTextValue.includes("Tabungan")) {
-               zakatType = "tabungan"
+                zakatType = "tabungan"
             }
 
             if (clickedTextValue.includes("Emas")) {
-               zakatType = "emas"
+                zakatType = "emas"
             }
 
             if (clickedTextValue.includes("Perak")) {
-               zakatType = "perak"
+                zakatType = "perak"
             }
 
             $('.tipezakat').text(zakatType)
         }
 
         function hitungZakat() {
-            var jumlahZakat = $('#jumlahzakat').val()
             console.log(jumlahZakat)
             console.log(username)
             $.ajax({
